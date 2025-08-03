@@ -66,61 +66,51 @@ def parse_github_data(mcp_output):
 
     parsed_data = []
 
-    for item in data:
-        # Determine if the item is an issue or pull request
-        is_pull_request = False
-
-        # Extract common fields
-        parsed_item = {
-            "type": "pull_request" if is_pull_request else "issue",
-            "number": item.get("number"),
-            "title": item.get("title"),
-            "state": item.get("state"),
-            "created_at": item.get("created_at"),
-            "updated_at": item.get("updated_at"),
-            "closed_at": item.get("closed_at"),
-            "user": item.get("user", {}).get("login"),
-            "html_url": item.get("html_url"),
-            "labels": [label.get("name") for label in item.get("labels", [])],
-            # "body": item.get("body"),
+    # Handle GitHub search API format: {'total_count': ..., 'incomplete_results': ..., 'items': [...]}
+    if isinstance(data, dict) and "items" in data:
+        items = data["items"]
+        for item in items:
+            parsed_item = {
+                "type": item.get("type", "repo"),
+                "id": item.get("id"),
+                "name": item.get("name"),
+                "full_name": item.get("full_name"),
+                "private": item.get("private"),
+                "owner": item.get("owner", {}).get("login"),
+                "html_url": item.get("html_url"),
+                "description": item.get("description"),
+                "created_at": item.get("created_at"),
+                "updated_at": item.get("updated_at"),
+                "pushed_at": item.get("pushed_at"),
+                "default_branch": item.get("default_branch"),
+            }
+            parsed_data.append(parsed_item)
+        # Optionally, add metadata
+        parsed_data = {
+            "total_count": data.get("total_count"),
+            "incomplete_results": data.get("incomplete_results"),
+            "items": parsed_data,
         }
+        return parsed_data
 
-        # Add issue-specific fields
-        # if not is_pull_request:
-        #     parsed_item.update(
-        #         {
-        #             "comments_count": item.get("comments"),
-        #             "reactions": item.get("reactions", {}).get("total_count"),
-        #             "milestone": item.get("milestone", {}).get("title")
-        #             if item.get("milestone")
-        #             else None,
-        #             "author_association": item.get("author_association"),
-        #         }
-        #     )
+    # Handle previous list-of-issues/pull-requests format
+    if isinstance(data, list):
+        for item in data:
+            # Extract common fields
+            parsed_item = {
+                "number": item.get("number"),
+                "title": item.get("title"),
+                "state": item.get("state"),
+                "created_at": item.get("created_at"),
+                "updated_at": item.get("updated_at"),
+                "closed_at": item.get("closed_at"),
+                "user": item.get("user", {}).get("login"),
+                "html_url": item.get("html_url"),
+                "labels": [label.get("name") for label in item.get("labels", [])],
+            }
 
-        # Add pull request-specific fields
-        if is_pull_request:
-            parsed_item.update(
-                {
-                    "merged_at": item.get("merged_at")
-                    or (
-                        item.get("pull_request", {}).get("merged_at")
-                        if "pull_request" in item
-                        else None
-                    ),
-                    "head_branch": item.get("head", {}).get("ref")
-                    if "head" in item
-                    else None,
-                    "base_branch": item.get("base", {}).get("ref")
-                    if "base" in item
-                    else None,
-                    "merge_commit_sha": item.get("merge_commit_sha")
-                    if "merge_commit_sha" in item
-                    else None,
-                    "draft": item.get("draft", False),
-                }
-            )
+            parsed_data.append(parsed_item)
+        return parsed_data
 
-        parsed_data.append(parsed_item)
-
-    return parsed_data
+    # If not recognized, just return the raw data
+    return data
