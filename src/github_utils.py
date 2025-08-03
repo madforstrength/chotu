@@ -65,7 +65,7 @@ def parse_github_data(mcp_output):
         return {"error": f"Invalid MCP output format: {str(e)}"}
 
     parsed_data = []
-    print(data)
+
     for item in data:
         # Determine if the item is an issue or pull request
         is_pull_request = False

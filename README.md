@@ -20,7 +20,6 @@ chotu/
 │   ├── llm_interface.py   # Interface for interacting with the LLM
 │   ├── github_utils.py    # Functions for interacting with the GitHub MCP API
 │   ├── kubectl_utils.py   # Functions for executing kubectl commands
-│   └── config.py          # Configuration settings for the agent
 ├── requirements.txt       # Project dependencies
 ├── Dockerfile             # Instructions for building the Docker image
 ├── .env                   # Local environment variables (not committed)
@@ -103,7 +102,6 @@ Chotu is designed to be extensible. You can add more functionalities by modifyin
 - **LLM Interface:** The `src/llm_interface.py` file manages interactions with the Qwen3 7B model.
 - **GitHub Utilities:** Functions for GitHub API interactions are defined in `src/github_utils.py`.
 - **Kubectl Utilities:** Command execution functions are found in `src/kubectl_utils.py`.
-- **Configuration:** Settings and constants are stored in `src/config.py`.
 
 ## Contributing
 
