@@ -66,7 +66,7 @@ def main():
             "Instruction: " + user_input
         )
         llm_response = ask_llm(system_prompt)
-        print(f"[LLM Response]: {llm_response}")
+        # print(f"[LLM Response]: {llm_response}")
         try:
             # Remove code block markers and whitespace
             cleaned = llm_response.strip()
@@ -96,24 +96,28 @@ def main():
             tool_name = action_data.get("tool_name", "")
             params = action_data.get("params", {})
             if tool_name:
-                raw_result = call_github_mcp_tool(tool_name, params)
-                print(f"[Raw tool result]: {raw_result}")
-                # Send the raw result to the LLM for summarization
-                summarize_prompt = (
-                    "You are an assistant. The user asked: '" + user_input + "'.\n"
-                    "The following tool was called: '"
-                    + tool_name
-                    + "' with parameters: "
-                    + json.dumps(params)
-                    + ".\n"
-                    "Here is the raw result from the tool (as JSON or string):\n"
-                    + str(raw_result)
-                    + "\n"
-                    "Please summarize or present the result in a clear, human-readable way."
-                )
-                print(f"[Summarizing tool result for LLM]: {summarize_prompt}")
-                summary = ask_llm(summarize_prompt)
-                print(summary)
+                try:
+                    raw_result = call_github_mcp_tool(tool_name, params)
+                    # Send the raw result to the LLM for summarization
+                    summarize_prompt = (
+                        "You are an assistant. The user asked: '" + user_input + "'.\n"
+                        "The following tool was called: '"
+                        + tool_name
+                        + "' with parameters: "
+                        + json.dumps(params)
+                        + ".\n"
+                        "Here is the raw result from the tool (as JSON or string):\n"
+                        + str(raw_result)
+                        + "\n"
+                        "Please summarize or present the result in a clear, human-readable way."
+                    )
+                    # print(f"[Summarizing tool result for LLM]: {summarize_prompt}")
+                    summary = ask_llm(summarize_prompt)
+                    print(summary)
+                except Exception as e:
+                    print(
+                        f"[Agent error]: Exception while calling GitHub MCP tool '{tool_name}': {e}"
+                    )
             else:
                 print("[Agent error]: No GitHub MCP tool name provided by LLM.")
         elif action == "ask_user_for_missing_params":
