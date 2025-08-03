@@ -49,7 +49,7 @@ The agent will automatically read these values from the environment.
 1. **Clone the repository:**
 
    ```
-   git clone <repository-url>
+   git clone https://github.com/madforstrength/chotu
    cd chotu
    ```
 
