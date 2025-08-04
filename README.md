@@ -107,6 +107,21 @@ Chotu is designed to be extensible. You can add more functionalities by modifyin
 
 Contributions are welcome! Please feel free to submit a pull request or open an issue for any enhancements or bug fixes.
 
+# Future Improvements
+
+Here are some ideas for future enhancements to Chotu:
+
+- **LangChain Integration:** Use LangChain to enable multi-step workflows, conversational memory, and more advanced agent planning.
+- **Multi-Tool Orchestration:** Allow the agent to chain multiple tool calls and LLM responses for complex tasks.
+- **Conversational Memory:** Add persistent or session-based memory so Chotu can remember previous interactions and context.
+- **Custom Tool Support:** Integrate more APIs and tools (e.g., Slack, Jira, cloud providers) for broader automation.
+- **Retrieval-Augmented Generation:** Add support for searching documentation, code, or knowledge bases to improve answers.
+- **Web UI:** Build a simple web interface for easier interaction and sharing.
+- **Authentication & Security:** Add support for secure secrets management and user authentication.
+- **Better Error Handling:** Improve robustness and user feedback for tool failures and edge cases.
+
+Contributions and suggestions are welcome!
+
 ## License
 
 This project is licensed under the MIT License. See the LICENSE file for more details.
